@@ -34,3 +34,6 @@
 | [**sony-fw-inspect**](https://github.com/kan-xx/sony-fw-inspect) | 离线分析与仿真 | 512 KiB 窗口化逻辑闪存采集与差异调和、16 分区与 `WBI1` 热启动映像解包、`ld-2.11.2.so` `DT_RELCOUNT = 0` 构建审计、跨三核 Unicorn 无桩执行套件 |
 | [**a7r3-boot-runtime**](https://github.com/kan-xx/a7r3-boot-runtime) | 机内常驻底座 | `libIMDB.so` 纯数据段扩展、双槽事务日志与单次冷启动重试守护进程 `a7r-boot-guard`、生命周期屏障协调器与 `nlink >= 1` 映射保留原子发布器 |
 | [**a7r3-kernel-video-quarantine**](https://github.com/kan-xx/a7r3-kernel-video-quarantine) | 内核探针与总线隔离 | Linux `3.0.27` 独立无符号 `.ko` 被动观测探针、RTOS VCD 编码总线 `LDREX/STREX + DMB` 失效关闭隔离门（`br_native_fence_only`）、DMM/GIC/SGC 回收门控与原码验证集 |
+| [**a7r3-custom-shutter**](https://github.com/kan-xx/a7r3-custom-shutter) | 快门音效后端 | RTOS `AudioIP` 32B 有符号残差编解码器、`/dev/mmcb` `'A'..'Z'` 动态盘符加载、`START_EXPOSURE_NOTIFY` `16 ms` 曝光起点 GOT 观察器与双队列连拍抢占宿主 |
+| [**a7r3-native-ui**](https://github.com/kan-xx/a7r3-native-ui) | 原生 UI 与菜单路由 | `View 0xFFC` 27 槽 C++ 虚表继承、`WidgetServer` UTF-8 中文图层渲染、`ViewMenu` `SettingNode` `@VFFC` 原子路由、`RTLD_NOLOAD` 后端事务栅栏与实时拓扑检视器 |
+| [**a7r3-full-touch**](https://github.com/kan-xx/a7r3-full-touch) | 全界面触控与手势 | `ViewSystem + 0x14` 单点输入回调桥、`20 ms` 异步队列排空栅栏、`MENU`/`Fn`/`IroiroCon`/`0xFFC` 多界面路由，以及支持 JPEG 与 RAW 的 `ViewZoomPb` 双指捏合缩放引擎 |
