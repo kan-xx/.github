@@ -54,4 +54,4 @@
 
 | 仓库 | 简介 |
 | :--- | :--- |
-| [**a7r3-experiment-diary**](https://github.com/kan-xx/a7r3-experiment-diary) | 横跨 18 天的完整工程实验日记（含总纲、四卷按日复盘与单文件全本合订版），详实记录从 USB 破门、黑屏尸检、无桩证伪到全栈落地的推导与排障全过程 |
+| [**a7r3-experiment-diary**](https://github.com/kan-xx/a7r3-experiment-diary) | 横跨 18 天的工程实验记录（含总纲、四卷按日记录与单文件合订本），记录从 USB 服务连接、休眠唤醒排障、无桩仿真验证到各模块落地的调试过程 |
