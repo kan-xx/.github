@@ -1,6 +1,6 @@
 # kan-xx
 
-围绕 **Sony Alpha 7R III (`ILCE-7RM3`, FW `3.10`)** 构建的模块化机内运行时与原生功能扩展项目。在不拆机、不改动原厂固件与内核映像的前提下，打通从 USB 服务连接、离线指令仿真、机内自愈常驻底座，到自定义快门音效、机身原生中文菜单与全界面触控的完整链路。
+围绕 **Sony Alpha 7R III (`ILCE-7RM3`, FW `3.10`)** 构建的模块化机内运行时与原生功能扩展项目。在不拆机、不改刷原厂固件与内核映像的前提下，打通从 USB 服务连接、离线指令仿真、机内自愈常驻底座，到自定义快门音效、机身原生中文菜单、全界面触控与 3D LUT 色彩工具链的完整链路。
 
 ---
 
@@ -14,26 +14,44 @@
 
 ---
 
-## 架构与设计原则
+## 工程实现方式
 
-整套系统不对机身闪存中的 Linux 内核映像（`uImage`）、RTOS 固件或原厂核心可执行代码段（`.text`）做任何静态修改，亦不涉及固件重打包与分区烧录。持久化入口仅通过向模块注册表 `libIMDB.so` 追加一段纯数据段描述符实现，由原厂动态加载器在启动期按标准生命周期拉起独立编译的外部共享库。用户态行为扩展在运行态内存（RAM）中通过 GOT 重定位替换与 UI 回调桥接完成；内核态硬件观测与总线边界控制则以零外部符号依赖的独立 `.ko` 模块在运行期按需挂载，断电后即恢复原厂初始内存状态。
+**运行态挂载，不重刷原厂固件与内核**  
+机身闪存里的 Linux 内核（`uImage`）、RTOS 固件与原厂核心程序代码段（`.text`）保持零字节改动，不打包刷机镜像，也不覆盖系统分区。持久化入口只向模块注册表 `libIMDB.so` 追加一段纯数据描述符，开机时由原厂加载器按标准生命周期拉起外部动态库；用户态功能在内存（RAM）中通过 GOT 表指针替换与 UI 回调桥接生效，内核态硬件观测则以独立无符号 `.ko` 模块在运行期按需挂载，关机断电即清空还原。
 
-全栈面向无外部硬件调试口（不拆机焊接主板串口、不依赖底层刷机短接器）的真实单机环境设计。任何持久化部署均受早期启动守护进程 `a7r-boot-guard` 的双槽 SHA-256 事务日志保护：若主进程未能在 60 秒窗口内完成生命周期握手或发生连续异常，守护进程自动将注册表原子切回原厂备份；运行期文件更新通过保留活跃映射底层 inode 的硬链接引用计数（`nlink >= 1`），确保 `/usr` 分区始终可安全重挂载为只读。在涉及跨核 DMA 与编码总线的硬件耦合路径上，凡未闭合完整停机与资源回收证明的状态均遵循失效关闭（Fail-Closed）原则，优先锁定租约并隔离通道，杜绝盲目释放资源引发二次破坏。
+**免拆机串口的机内自愈回滚与总线隔离**  
+整套方案面向日常使用的单台零售机身设计，不拆机焊接主板 UART 串口，也不依赖外部硬件短接线进底层刷机模式。开机早期由守护进程 `a7r-boot-guard` 维护双槽 SHA-256 事务日志，一旦主进程 60 秒内未能完成握手或发生连续异常，自动将注册表切回原厂备份；在线更新文件时保留已映射底层 inode 的硬链接计数（`nlink >= 1`），保证 `/usr` 分区随时能安全切回只读。对于跨核 DMA 与视频编码总线等硬件路径，凡未确认底层完全停机排空的状态一律锁定租约并就地隔离（Fail-Closed），杜绝盲目释放内存引发死锁或二次踩踏。
 
-在接触物理设备之前，核心加载链路、重定位兼容层与跨核参数路径均先在隔离的 QEMU 原厂动态加载器环境及跨 ARM、Thumb、MIPS32 的无桩指令仿真器（Stub-Free Unicorn）中直接运行原厂机器码完成验证，在离线阶段提前收敛 ABI 边界、算术位宽截断与缓存一致性约束。
+**先在离线跑通原厂真实指令，再接触真机**  
+所有动态加载链路、重定位兼容处理与跨核参数计算，在写入相机前均先放入隔离的 QEMU 原厂动态加载器沙箱与跨 ARM、Thumb、MIPS32 的 Unicorn 无桩仿真环境中直接执行原厂机器码，在离线阶段提前排掉旧版 `ld-2.11.2.so` 重定位覆写、传感器参数 8 位截断等隐患。
 
-依托支持电源休眠与唤醒屏障（`INACT / ACT`）的常驻运行时底座，上层模块能够在原厂并未预留接口的领域独立构建完整的原生功能子系统。所有公开仓库仅包含独立编写的 C、ARMv7 汇编与 Python 源码及确定性构建脚本，不携带、不分发任何专有固件二进制文件，并提供无需物理机身即可独立运行的宿主机测试套件。
+**纯原创源码与模块化拆分**  
+依托支持电源休眠与唤醒同步（`INACT / ACT`）的常驻底座，自定义快门音、机身原生中文菜单、全界面触控与双指缩放、3D LUT 色彩工具各自独立成仓、按需组合。所有仓库仅包含独立编写的 C、ARMv7 汇编与 Python 源码及确定性构建脚本，不携带任何厂商固件二进制，克隆后即可直接运行本地离线测试。
 
 ---
 
-## 仓库索引
+## 仓库导航
 
-| 仓库 | 层级 | 职责概述 |
-| :--- | :--- | :--- |
-| [**a7r3-usb-senser**](https://github.com/kan-xx/a7r3-usb-senser) | 连接与会话层 | 主机到相机 USB 模式状态机、USB 3.1 SuperSpeed `516B -> 1024B` 包对齐认证传输、`16B / 2ms` 节流终端与 `/tmp_bt` 内存暂存会话 SDK |
-| [**sony-fw-inspect**](https://github.com/kan-xx/sony-fw-inspect) | 离线分析与仿真 | 512 KiB 窗口化逻辑闪存采集与差异调和、16 分区与 `WBI1` 热启动映像解包、`ld-2.11.2.so` `DT_RELCOUNT = 0` 构建审计、跨三核 Unicorn 无桩执行套件 |
-| [**a7r3-boot-runtime**](https://github.com/kan-xx/a7r3-boot-runtime) | 机内常驻底座 | `libIMDB.so` 纯数据段扩展、双槽事务日志与单次冷启动重试守护进程 `a7r-boot-guard`、生命周期屏障协调器与 `nlink >= 1` 映射保留原子发布器 |
-| [**a7r3-kernel-video-quarantine**](https://github.com/kan-xx/a7r3-kernel-video-quarantine) | 内核探针与总线隔离 | Linux `3.0.27` 独立无符号 `.ko` 被动观测探针、RTOS VCD 编码总线 `LDREX/STREX + DMB` 失效关闭隔离门（`br_native_fence_only`）、DMM/GIC/SGC 回收门控与原码验证集 |
-| [**a7r3-custom-shutter**](https://github.com/kan-xx/a7r3-custom-shutter) | 快门音效后端 | RTOS `AudioIP` 32B 有符号残差编解码器、`/dev/mmcb` `'A'..'Z'` 动态盘符加载、`START_EXPOSURE_NOTIFY` `16 ms` 曝光起点 GOT 观察器与双队列连拍抢占宿主 |
-| [**a7r3-native-ui**](https://github.com/kan-xx/a7r3-native-ui) | 原生 UI 与菜单路由 | `View 0xFFC` 27 槽 C++ 虚表继承、`WidgetServer` UTF-8 中文图层渲染、`ViewMenu` `SettingNode` `@VFFC` 原子路由、`RTLD_NOLOAD` 后端事务栅栏与实时拓扑检视器 |
-| [**a7r3-full-touch**](https://github.com/kan-xx/a7r3-full-touch) | 全界面触控与手势 | `ViewSystem + 0x14` 单点输入回调桥、`20 ms` 异步队列排空栅栏、`MENU`/`Fn`/`IroiroCon`/`0xFFC` 多界面路由，以及支持 JPEG 与 RAW 的 `ViewZoomPb` 双指捏合缩放引擎 |
+### 基础设施与运行底座
+
+| 仓库 | 简介 |
+| :--- | :--- |
+| [**a7r3-usb-senser**](https://github.com/kan-xx/a7r3-usb-senser) | 免拆机 USB 服务连接与会话 SDK，解决 USB 3.1 SuperSpeed 包对齐认证握手、串口节流与 `/tmp_bt` 纯内存安全暂存 |
+| [**sony-fw-inspect**](https://github.com/kan-xx/sony-fw-inspect) | 非破坏性固件分块对账采集、分区与 `WBI1` 解包、旧版加载器 `DT_RELCOUNT = 0` 构建修复及三核 Unicorn 无桩仿真工具链 |
+| [**a7r3-boot-runtime**](https://github.com/kan-xx/a7r3-boot-runtime) | 零原厂代码改写的机内常驻底座，包含 `libIMDB.so` 纯数据段扩展、60 秒双槽日志自动回滚守护与只读分区原子发布器 |
+| [**a7r3-kernel-video-quarantine**](https://github.com/kan-xx/a7r3-kernel-video-quarantine) | 断电即净的 Linux 独立无符号 `.ko` 动态探针、视频编码总线失效关闭隔离门控（`br_native_fence_only`）及 4K60 / 对焦验证集 |
+
+### 原生功能与色彩扩展
+
+| 仓库 | 简介 |
+| :--- | :--- |
+| [**a7r3-custom-shutter**](https://github.com/kan-xx/a7r3-custom-shutter) | SD 卡自定义快门音效后端，包含 RTOS `AudioIP` 残差音频编解码器、动态盘符加载、`16 ms` 曝光起点钩子与双队列连拍抢占调度 |
+| [**a7r3-native-ui**](https://github.com/kan-xx/a7r3-native-ui) | 机身原生 UI 扩展框架，基于 27 槽 C++ `View` 虚表继承、`WidgetServer` UTF-8 中文图层渲染与菜单树原子路由挂载原生设置页 |
+| [**a7r3-full-touch**](https://github.com/kan-xx/a7r3-full-touch) | 全界面触控与手势引擎，基于单点输入回调桥与异步队列排空栅栏解锁主菜单、`Fn`、二级参数页触控，并支持 JPEG / RAW 回放双指捏合缩放 |
+| [**a7r3-creative-look-lut**](https://github.com/kan-xx/a7r3-creative-look-lut) | 创意外观（`FL2 / FL3`）跨代色彩解析与硬件 3D LUT 工具链，涵盖 `.ARW` `SR2SubIFD` 解密与 `CamCore` `5×9×9`（8-Bank `1,620 B`）编解码器 |
+
+### 实验记录
+
+| 仓库 | 简介 |
+| :--- | :--- |
+| [**a7r3-experiment-diary**](https://github.com/kan-xx/a7r3-experiment-diary) | 横跨 18 天的完整工程实验日记（含总纲、四卷按日复盘与单文件全本合订版），详实记录从 USB 破门、黑屏尸检、无桩证伪到全栈落地的推导与排障全过程 |
