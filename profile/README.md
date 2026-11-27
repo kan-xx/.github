@@ -6,11 +6,11 @@
 
 ## 免责声明
 
-> 大家请以学习为目的使用本组织下的所有仓库⚠️⚠️⚠️⚠️，[安全研究法律边界与合规须知](https://github.com/kan-xx/.github/blob/main/DISCLAIMER.md#法规与合规参考)
+> 大家请以学习为目的使用本组织下的所有仓库⚠️⚠️⚠️⚠️，[安全研究法律边界与合规须知](https://github.com/sony-a7r3-research/.github/blob/main/DISCLAIMER.md#法规与合规参考)
 >
 > 本组织下所有仓库的内容仅供学习和参考之用，禁止用于商业用途。任何人或组织不得将相关内容用于非法用途或侵犯他人合法权益。所涉及的固件分析、系统逆向与硬件接口研究技术仅用于个人合法自有设备上的学习与研究，不得用于未经授权侵入或破坏他人设备、绕过技术保护措施、提取或传播第三方专有固件或其他非法行为。对于因使用相关内容而引起的任何法律责任、硬件损坏（变砖）、数据丢失或保修失效，各仓库及作者不承担任何责任。使用相关内容即表示您同意本免责声明的所有条款和条件。
 >
-> 点击查看更为详细的免责声明。[点击跳转](https://github.com/kan-xx/.github/blob/main/DISCLAIMER.md)
+> 点击查看更为详细的免责声明。[点击跳转](https://github.com/sony-a7r3-research/.github/blob/main/DISCLAIMER.md)
 
 ---
 
@@ -36,22 +36,22 @@
 
 | 仓库 | 简介 |
 | :--- | :--- |
-| [**a7r3-usb-senser**](https://github.com/kan-xx/a7r3-usb-senser) | 免拆机 USB 服务连接与会话 SDK，解决 USB 3.1 SuperSpeed 包对齐认证握手、串口节流与 `/tmp_bt` 纯内存安全暂存 |
-| [**sony-fw-inspect**](https://github.com/kan-xx/sony-fw-inspect) | 非破坏性固件分块对账采集、分区与 `WBI1` 解包、旧版加载器 `DT_RELCOUNT = 0` 构建修复及三核 Unicorn 无桩仿真工具链 |
-| [**a7r3-boot-runtime**](https://github.com/kan-xx/a7r3-boot-runtime) | 零原厂代码改写的机内常驻底座，包含 `libIMDB.so` 纯数据段扩展、60 秒双槽日志自动回滚守护与只读分区原子发布器 |
-| [**a7r3-kernel-video-quarantine**](https://github.com/kan-xx/a7r3-kernel-video-quarantine) | 断电即净的 Linux 独立无符号 `.ko` 动态探针、视频编码总线失效关闭隔离门控（`br_native_fence_only`）及 4K60 / 对焦验证集 |
+| [**a7r3-usb-senser**](https://github.com/sony-a7r3-research/a7r3-usb-senser) | 免拆机 USB 服务连接与会话 SDK，解决 USB 3.1 SuperSpeed 包对齐认证握手、串口节流与 `/tmp_bt` 纯内存安全暂存 |
+| [**sony-fw-inspect**](https://github.com/sony-a7r3-research/sony-fw-inspect) | 非破坏性固件分块对账采集、分区与 `WBI1` 解包、旧版加载器 `DT_RELCOUNT = 0` 构建修复及三核 Unicorn 无桩仿真工具链 |
+| [**a7r3-boot-runtime**](https://github.com/sony-a7r3-research/a7r3-boot-runtime) | 零原厂代码改写的机内常驻底座，包含 `libIMDB.so` 纯数据段扩展、60 秒双槽日志自动回滚守护与只读分区原子发布器 |
+| [**a7r3-kernel-video-quarantine**](https://github.com/sony-a7r3-research/a7r3-kernel-video-quarantine) | 断电即净的 Linux 独立无符号 `.ko` 动态探针、视频编码总线失效关闭隔离门控（`br_native_fence_only`）及 4K60 / 对焦验证集 |
 
 ### 原生功能与色彩扩展
 
 | 仓库 | 简介 |
 | :--- | :--- |
-| [**a7r3-custom-shutter**](https://github.com/kan-xx/a7r3-custom-shutter) | SD 卡自定义快门音效后端，包含 RTOS `AudioIP` 残差音频编解码器、动态盘符加载、`16 ms` 曝光起点钩子与双队列连拍抢占调度 |
-| [**a7r3-native-ui**](https://github.com/kan-xx/a7r3-native-ui) | 机身原生 UI 扩展框架，基于 27 槽 C++ `View` 虚表继承、`WidgetServer` UTF-8 中文图层渲染与菜单树原子路由挂载原生设置页 |
-| [**a7r3-full-touch**](https://github.com/kan-xx/a7r3-full-touch) | 全界面触控与手势引擎，基于单点输入回调桥与异步队列排空栅栏解锁主菜单、`Fn`、二级参数页触控，并支持 JPEG / RAW 回放双指捏合缩放 |
-| [**a7r3-creative-look-lut**](https://github.com/kan-xx/a7r3-creative-look-lut) | 创意外观（`FL2 / FL3`）跨代色彩解析与硬件 3D LUT 工具链，涵盖 `.ARW` `SR2SubIFD` 解密与 `CamCore` `5×9×9`（8-Bank `1,620 B`）编解码器 |
+| [**a7r3-custom-shutter**](https://github.com/sony-a7r3-research/a7r3-custom-shutter) | SD 卡自定义快门音效后端，包含 RTOS `AudioIP` 残差音频编解码器、动态盘符加载、`16 ms` 曝光起点钩子与双队列连拍抢占调度 |
+| [**a7r3-native-ui**](https://github.com/sony-a7r3-research/a7r3-native-ui) | 机身原生 UI 扩展框架，基于 27 槽 C++ `View` 虚表继承、`WidgetServer` UTF-8 中文图层渲染与菜单树原子路由挂载原生设置页 |
+| [**a7r3-full-touch**](https://github.com/sony-a7r3-research/a7r3-full-touch) | 全界面触控与手势引擎，基于单点输入回调桥与异步队列排空栅栏解锁主菜单、`Fn`、二级参数页触控，并支持 JPEG / RAW 回放双指捏合缩放 |
+| [**a7r3-creative-look-lut**](https://github.com/sony-a7r3-research/a7r3-creative-look-lut) | 创意外观（`FL2 / FL3`）跨代色彩解析与硬件 3D LUT 工具链，涵盖 `.ARW` `SR2SubIFD` 解密与 `CamCore` `5×9×9`（8-Bank `1,620 B`）编解码器 |
 
 ### 实验记录
 
 | 仓库 | 简介 |
 | :--- | :--- |
-| [**a7r3-experiment-diary**](https://github.com/kan-xx/a7r3-experiment-diary) | 横跨 18 天的工程实验记录（含总纲、四卷按日记录与单文件合订本），记录从 USB 服务连接、休眠唤醒排障、无桩仿真验证到各模块落地的调试过程 |
+| [**a7r3-experiment-diary**](https://github.com/sony-a7r3-research/a7r3-experiment-diary) | 横跨 18 天的工程实验记录（含总纲、四卷按日记录与单文件合订本），记录从 USB 服务连接、休眠唤醒排障、无桩仿真验证到各模块落地的调试过程 |
